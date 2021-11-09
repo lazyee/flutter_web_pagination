@@ -91,7 +91,6 @@ class _WebPaginationState extends State<WebPagination> {
 
   Widget _buildPageInput() {
     return Container(
-        // constraints: const BoxConstraints(minWidth: 100),
         height: 40,
         padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
         decoration: BoxDecoration(
