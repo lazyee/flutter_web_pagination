@@ -1,6 +1,7 @@
 library flutter_web_pagination;
 
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_text_input_formatter/formatter.dart';
 
@@ -8,11 +9,13 @@ class WebPagination extends StatefulWidget {
   final int currentPage;
   final int totalPage;
   final ValueChanged<int> onPageChanged;
+  final int displayItemCount;
   const WebPagination(
       {Key? key,
       required this.onPageChanged,
       required this.currentPage,
-      required this.totalPage})
+      required this.totalPage,
+      this.displayItemCount = 11})
       : super(key: key);
 
   @override
@@ -22,6 +25,7 @@ class WebPagination extends StatefulWidget {
 class _WebPaginationState extends State<WebPagination> {
   late int currentPage = widget.currentPage;
   late int totalPage = widget.totalPage;
+  late int displayItemCount = widget.displayItemCount;
   late TextEditingController controller = TextEditingController();
 
   @override
@@ -54,25 +58,33 @@ class _WebPaginationState extends State<WebPagination> {
       },
     ));
 
-    int _page = currentPage - 5;
-    _page = _page < 1 ? 1 : _page;
-    for (; _page <= currentPage; _page++) {
+    var leftPageItemCount = (displayItemCount / 2).floor();
+
+    var rightPageItemCount = max(0, displayItemCount - leftPageItemCount - 1);
+
+    int startPage = max(
+        1,
+        currentPage -
+            max(leftPageItemCount,
+                (displayItemCount - totalPage + currentPage - 1)));
+
+    for (; startPage <= currentPage; startPage++) {
       widgetList.add(_PageItem(
-        page: _page,
-        isChecked: _page == currentPage,
+        page: startPage,
+        isChecked: startPage == currentPage,
         onTap: (page) {
           _updatePage(page);
         },
       ));
     }
 
-    int endPage = _page + 4;
+    int endPage =
+        min(totalPage, max(displayItemCount, currentPage + rightPageItemCount));
 
-    endPage = endPage > totalPage ? totalPage : endPage;
-    for (; _page <= endPage; _page++) {
+    for (; startPage <= endPage; startPage++) {
       widgetList.add(_PageItem(
-        page: _page,
-        isChecked: _page == currentPage,
+        page: startPage,
+        isChecked: startPage == currentPage,
         onTap: (page) {
           _updatePage(page);
         },

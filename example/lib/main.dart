@@ -106,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 50),
             WebPagination(
                 currentPage: _counter,
-                totalPage: _counter + 20,
+                totalPage: 15,
+                displayItemCount: 11,
                 onPageChanged: (page) {
                   setState(() {
                     _counter = page;
